@@ -14,7 +14,7 @@ module.exports = function(grunt) {
   // creation: http://gruntjs.com/creating-tasks
 	var fs = require('fs');
 	var path = require('path');
-	var config = grunt.config.get('mkdocs');
+	var config = grunt.config.get('mkdocs').options;
 
 	/*
 	 * Create the Markdown file
@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 	*/
 	var createMkFile = function(filename){
 		filename = filename + ".md";
-		var docs_directory = config.default_options.options.path;
+		var docs_directory = config.path;
 		var filepath = path.join(docs_directory, filename);
 		
 		fs.writeFileSync(filepath, '');
@@ -51,15 +51,29 @@ module.exports = function(grunt) {
 	};
 
 	/*
-	 * Register the task
 	 *
-	 * Add a page in mkdocs
+	 * Main grunt task. Prompts the user for details 
 	*/
-    grunt.registerTask("mkdocs", "Adds a Markdown page", function(filename, title){
+	grunt.registerTask("mkdocs", "Adds a Markdown page", function(){
+		// prompts user details	
+		grunt.task.run('prompt');
+	});
+
+
+	/*
+	 *
+	 * Adds a makrdown page
+	 * 
+	 * @param filename:string
+	 * @param title:string
+	*/ 
+	grunt.registerTask('mkdocs-addpage', "Adds a markdown page", function(filename, title){
 		var options = {
 			filename: filename,
-			title: title || "Default Title"
-		};
+			title: title 
+		}; 
+		
+		console.log(options);
 		// create markdown file
 		createMkFile(options.filename);
 		
